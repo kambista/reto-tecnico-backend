@@ -16,7 +16,7 @@ Construir un servicio backend simplificado para procesar operaciones de cambio d
 
 - Node.js
 - TypeScript
-- NestJS
+- NestJS o Express
 
 ### Deseables
 

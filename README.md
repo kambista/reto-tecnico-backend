@@ -42,13 +42,16 @@ Cada operación representa una solicitud de cambio realizada por un cliente.
 
 Crear el siguiente endpoint:
 
-```http 
-POST /transactions 
+```http
+POST /transactions
 ```
 ### Request
 
-```json 
-{   "customerId": "123",   "amountUsd": 100 } 
+```json
+{
+  "customerId": "123",
+  "amountUsd": 100
+}
 ```
 ### Comportamiento esperado
 
@@ -60,8 +63,14 @@ POST /transactions
 
 ### Response
 
-```json 
-{   "transactionId": "uuid",   "exchangeRate": 3.75,   "amountUsd": 100,   "amountPen": 375,   "status": "COMPLETED" } 
+```json
+{
+  "transactionId": "uuid",
+  "exchangeRate": 3.75,
+  "amountUsd": 100,
+  "amountPen": 375,
+  "status": "COMPLETED"
+}
 ```
 ---
 
@@ -69,13 +78,20 @@ POST /transactions
 
 Crear el endpoint:
 
-```http 
-GET /transactions/:id 
+```http
+GET /transactions/:id
 ```
 ### Response
 
-```json 
-{   "transactionId": "uuid",   "customerId": "123",   "exchangeRate": 3.75,   "amountUsd": 100,   "amountPen": 375,   "status": "COMPLETED" } 
+```json
+{
+  "transactionId": "uuid",
+  "customerId": "123",
+  "exchangeRate": 3.75,
+  "amountUsd": 100,
+  "amountPen": 375,
+  "status": "COMPLETED"
+}
 ```
 ---
 
@@ -83,15 +99,18 @@ GET /transactions/:id
 
 Crear el endpoint:
 
-```http 
-POST /transactions/upload 
+```http
+POST /transactions/upload
 ```
 El endpoint debe aceptar un archivo CSV.
 
 ### Ejemplo
 
-```csv 
-customerId,amountUsd 123,100 456,250 789,50 
+```csv
+customerId,amountUsd
+123,100
+456,250
+789,50
 ```
 ### Comportamiento esperado
 
@@ -122,8 +141,14 @@ Por cada fila:
 
 ### Ejemplo de error
 
-```json 
-{   "success": false,   "error": {     "code": "INVALID_AMOUNT",     "message": "Amount must be greater than zero"   } } 
+```json
+{
+  "success": false,
+  "error": {
+    "code": "INVALID_AMOUNT",
+    "message": "Amount must be greater than zero"
+  }
+}
 ```
 ---
 
@@ -184,7 +209,9 @@ Evaluaremos principalmente:
 1. Crear un fork del repositorio.
 2. Crear una rama con el siguiente formato:
 
-bash git checkout -b nombre-apellido 
+```bash
+git checkout -b nombre-apellido
+```
 
 3. Implementar la solución.
 4. Crear un Pull Request con los cambios realizados.

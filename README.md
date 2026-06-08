@@ -42,12 +42,14 @@ Cada operación representa una solicitud de cambio realizada por un cliente.
 
 Crear el siguiente endpoint:
 
-http POST /transactions 
-
+```http 
+POST /transactions 
+```
 ### Request
 
-json {   "customerId": "123",   "amountUsd": 100 } 
-
+```json 
+{   "customerId": "123",   "amountUsd": 100 } 
+```
 ### Comportamiento esperado
 
 1. Validar la información recibida.
@@ -58,34 +60,39 @@ json {   "customerId": "123",   "amountUsd": 100 }
 
 ### Response
 
-json {   "transactionId": "uuid",   "exchangeRate": 3.75,   "amountUsd": 100,   "amountPen": 375,   "status": "COMPLETED" } 
-
+```json 
+{   "transactionId": "uuid",   "exchangeRate": 3.75,   "amountUsd": 100,   "amountPen": 375,   "status": "COMPLETED" } 
+```
 ---
 
 ## 2. Consultar una transacción
 
 Crear el endpoint:
 
-http GET /transactions/:id 
-
+```http 
+GET /transactions/:id 
+```
 ### Response
 
-json {   "transactionId": "uuid",   "customerId": "123",   "exchangeRate": 3.75,   "amountUsd": 100,   "amountPen": 375,   "status": "COMPLETED" } 
-
+```json 
+{   "transactionId": "uuid",   "customerId": "123",   "exchangeRate": 3.75,   "amountUsd": 100,   "amountPen": 375,   "status": "COMPLETED" } 
+```
 ---
 
 ## 3. Procesamiento masivo mediante CSV
 
 Crear el endpoint:
 
-http POST /transactions/upload 
-
+```http 
+POST /transactions/upload 
+```
 El endpoint debe aceptar un archivo CSV.
 
 ### Ejemplo
 
-csv customerId,amountUsd 123,100 456,250 789,50 
-
+```csv 
+customerId,amountUsd 123,100 456,250 789,50 
+```
 ### Comportamiento esperado
 
 Por cada fila:
@@ -96,8 +103,9 @@ Por cada fila:
 
 ### Response sugerida
 
-json {   "processed": 3,   "failed": 0 } 
-
+```json 
+{   "processed": 3,   "failed": 0 } 
+```
 ---
 
 # Validaciones
@@ -114,8 +122,9 @@ json {   "processed": 3,   "failed": 0 }
 
 ### Ejemplo de error
 
-json {   "success": false,   "error": {     "code": "INVALID_AMOUNT",     "message": "Amount must be greater than zero"   } } 
-
+```json 
+{   "success": false,   "error": {     "code": "INVALID_AMOUNT",     "message": "Amount must be greater than zero"   } } 
+```
 ---
 
 # Persistencia

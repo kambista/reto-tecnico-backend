@@ -1,0 +1,139 @@
+swagger: '2.0'
+info:
+  title: Transaction API
+  description: Contrato de la API para la gestión de cambio de divisas y transacciones masivas.
+  version: 1.0.0
+consumes:
+  - application/json
+produces:
+  - application/json
+
+basePath: /api/v1
+
+paths:
+  /transactions:
+    post:
+      summary: Crear una transacción individual
+      description: Registra una nueva transacción y calcula el monto en PEN.
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/CreateTransactionInput'
+      responses:
+        '201':
+          description: Transacción creada con éxito.
+          schema:
+            $ref: '#/definitions/TransactionResponse'
+        '400':
+          description: Error de validación en los campos enviados.
+          schema:
+            $ref: '#/definitions/ValidationErrorResponse'
+
+  /transactions/upload:
+    post:
+      summary: Cargar transacciones masivas (CSV)
+      description: Procesa un archivo CSV fila por fila aplicando validaciones estrictas.
+      consumes:
+        - multipart/form-data
+      parameters:
+        - name: file
+          in: formData
+          description: Archivo .csv a procesar
+          required: true
+          type: file
+      responses:
+        '201':
+          description: Archivo procesado correctamente. Retorna el reporte general.
+          schema:
+            $ref: '#/definitions/CsvReportResponse'
+        '400':
+          description: Se encontró un error de validación en el contenido del archivo.
+          schema:
+            $ref: '#/definitions/ValidationErrorResponse'
+
+  /transactions/{id}:
+    get:
+      summary: Buscar una transacción por ID
+      description: Obtiene los detalles de una transacción previamente almacenada en la base de datos.
+      parameters:
+        - name: id
+          in: path
+          description: ID único de la transacción (UUID)
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Datos de la transacción encontrada.
+          schema:
+            $ref: '#/definitions/TransactionResponse'
+        '404':
+          description: La transacción no existe.
+
+definitions:
+  CreateTransactionInput:
+    type: object
+    required:
+      - customerId
+      - amountUsd
+    properties:
+      customerId:
+        type: string
+        example: "64b7c1e4f1a2b3c4d5e6f7a8"
+      amountUsd:
+        type: number
+        format: float
+        example: 150.50
+
+  TransactionResponse:
+    type: object
+    properties:
+      transactionId:
+        type: string
+        example: "6668a6fd0f6c245c635df01a"
+      customerId:
+        type: string
+        example: "64b7c1e4f1a2b3c4d5e6f7a8"
+      amountUsd:
+        type: number
+        example: 150.50
+      amountPEN:
+        type: number
+        example: 564.38
+      createdAt:
+        type: string
+        format: date-time
+        example: "2026-06-11T22:15:30.000Z"
+
+  CsvReportResponse:
+    type: object
+    properties:
+      message:
+        type: string
+        example: "Archivo CSV procesado con éxito"
+      totalProcessed:
+        type: integer
+        example: 10
+      successful:
+        type: integer
+        example: 10
+      failed:
+        type: integer
+        example: 0
+
+  ValidationErrorResponse:
+    type: object
+    properties:
+      success:
+        type: boolean
+        example: false
+      error:
+        type: object
+        properties:
+          code:
+            type: string
+            example: "INVALID_AMOUNT"
+          message:
+            type: string
+            example: "Amount must be greater than zero"

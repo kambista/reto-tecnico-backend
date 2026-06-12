@@ -1,228 +1,55 @@
-# Kambista Backend Developer Challenge
-
-👋 ¡Hola!
-
-Somos Kambista y estamos buscando un nuevo miembro para nuestro equipo de tecnología.
-
-Para esta etapa hemos preparado un reto técnico enfocado en desarrollo backend. El objetivo es evaluar tu capacidad para diseñar APIs, procesar información, validar datos y escribir código mantenible.
-
-## Objetivo
-
-Construir un servicio backend simplificado para procesar operaciones de cambio de divisas.
-
-## Tecnologías
-
-### Requeridas
-
-- Node.js
-- TypeScript
-- NestJS o Express
-
-### Deseables
-
-- MongoDB
-- Jest
-- Swagger/OpenAPI
-
-> Puedes utilizar librerías adicionales si consideras que aportan valor a la solución.
-
----
-
-# Caso
-
-Kambista necesita registrar operaciones de cambio de USD a PEN.
-
-Cada operación representa una solicitud de cambio realizada por un cliente.
-
----
-
-# Requerimientos
-
-## 1. Registrar una transacción
-
-Crear el siguiente endpoint:
-
-```http
-POST /transactions
+# Instrucciones de instalación.
+1. clonar el repositorio
+2. instalar dependencias 
 ```
-### Request
-
-```json
-{
-  "customerId": "123",
-  "amountUsd": 100
-}
+yarn install 
 ```
-### Comportamiento esperado
-
-1. Validar la información recibida.
-2. Obtener un tipo de cambio fijo de 3.75.
-3. Calcular el monto equivalente en PEN.
-4. Registrar la operación.
-5. Retornar la información generada.
-
-### Response
-
-```json
-{
-  "transactionId": "uuid",
-  "exchangeRate": 3.75,
-  "amountUsd": 100,
-  "amountPen": 375,
-  "status": "COMPLETED"
-}
+2. configurar las variables de entorno, basarte del archivo 
 ```
----
-
-## 2. Consultar una transacción
-
-Crear el endpoint:
-
-```http
-GET /transactions/:id
+.env.template
 ```
-### Response
+3. probar el endpoint con locamente con http://localhost:3000/api/v1 (GET)
 
-```json
-{
-  "transactionId": "uuid",
-  "customerId": "123",
-  "exchangeRate": 3.75,
-  "amountUsd": 100,
-  "amountPen": 375,
-  "status": "COMPLETED"
-}
+# Instrucciones de ejecución.
+1. yarn start:dev
+2. La API estará disponible localmente en: http://localhost:3000/api/v1
+3. Para acceder a la documentación interactiva de la API (Swagger), ingresar a: http://localhost:3000/api/v1/docs
+
+# Instrucciones de ejecución de pruebas e2e 
+1. configurar la variables de entorno env.test, basandose en el archvio env.test.template
+2. usar el comando para levantar la base de datos de prueba
 ```
----
-
-## 3. Procesamiento masivo mediante CSV
-
-Crear el endpoint:
-
-```http
-POST /transactions/upload
+yarn db:test:up
 ```
-El endpoint debe aceptar un archivo CSV.
-
-### Ejemplo
-
-```csv
-customerId,amountUsd
-123,100
-456,250
-789,50
+3. Ejecutar pruebas unitarias 
 ```
-### Comportamiento esperado
-
-Por cada fila:
-
-1. Validar la información.
-2. Procesar la transacción.
-3. Registrar el resultado.
-
-### Response sugerida
-
-```json 
-{   "processed": 3,   "failed": 0 } 
+yarn test
 ```
----
-
-# Validaciones
-
-## customerId
-
-- Obligatorio.
-
-## amountUsd
-
-- Obligatorio.
-- Debe ser numérico.
-- Debe ser mayor a cero.
-
-### Ejemplo de error
-
-```json
-{
-  "success": false,
-  "error": {
-    "code": "INVALID_AMOUNT",
-    "message": "Amount must be greater than zero"
-  }
-}
+4. Ejecutar pruebas e2e
 ```
----
-
-# Persistencia
-
-Las transacciones deben almacenarse para poder ser consultadas posteriormente.
-
-Puedes elegir la estrategia de persistencia que consideres adecuada.
-
----
-
-# Testing
-
-Implementar al menos:
-
-- 1 prueba unitaria.
-- 1 prueba de integración o e2e.
-
----
-
-# README
-
-Incluir en la documentación:
-
-- Instrucciones de instalación.
-- Instrucciones de ejecución.
-- Decisiones técnicas relevantes.
-- Supuestos realizados durante el desarrollo.
-
----
-
-# Criterios de evaluación
-
-Evaluaremos principalmente:
-
-- Calidad de código.
-- Organización del proyecto.
-- Manejo de errores.
-- Validaciones.
-- Testing.
-- Legibilidad.
-- Buenas prácticas.
-- Mantenibilidad.
-
----
-
-# Bonus (Opcional)
-
-- Swagger/OpenAPI.
-- Logging.
-- Docker.
-- Cobertura adicional de pruebas.
-
----
-
-# Entrega
-
-1. Crear un fork del repositorio.
-2. Crear una rama con el siguiente formato:
-
-```bash
-git checkout -b nombre-apellido
+yarn test:e2e
 ```
-
-3. Implementar la solución.
-4. Crear un Pull Request con los cambios realizados.
-5. Compartir el enlace del Pull Request para su revisión.
-
----
-
-# Tiempo estimado
-
-Entre 4 y 6 horas.
-
-No es necesario implementar funcionalidades adicionales fuera de los requerimientos indicados.
-
-¡Muchos éxitos! 🚀
+5. Apagar la base de datos de pruebas 
+```
+yarn db:test:down 
+```
+# Decisiones técnicas relevantes.
+- Para el ambiente Dev se decidio usar un cluster de mongoDb
+- Para el ambiente test e2e se decicidio tener crear una base de datos aparte, para diferencias ambientes y crear sus comando respectivos en package json 
+comando como:
+```
+yarn db:test:up
+yarn db:test:down
+```
+- Se decidio usar perfiles (profiles: - test) en el archivo docker compose para diferencias, los servicios por ambien o uso.
+- se decidio crear un modulo prisma y un servicio para que las consultas se haga a travez de ella.
+- se decidio agregar una carpeta test para diferencias los archivos de tipo test de ese modulo.
+- se modificó la configuración predeterminada del archivo jest-e2e.json para permitir que las pruebas e2e coexistan dentro de la carpeta de cada módulo (src/transaction/test/e2e).
+- se creo archivos reutilizables como mocks y stubs para su uso recurrente en pruebas unitarias.
+- se creo un ExceptionFilter para interceptar los errores de Class-validator y tener un formato ante las fallas de formato.
+- Se agrego el uso de repository pattern y Entities para el desacoplamiento del ORM prisma.
+# Supuestos realizados durante el desarrollo.
+- El valor minimo de amountUsd para la creación de transacciones es de 1 dolar.
+- Se elegio prisma 6 como ORM por su conpatibilidad con mongoDb
+- Se asumio que los errores en el endpoint /transactions/upload, si el archivo csv tiene un error de formato, se para el proceso.
+- Se agrego a los endpoint, el global prefix api/v1

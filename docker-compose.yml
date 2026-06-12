@@ -1,0 +1,15 @@
+services:
+  db-test: 
+    image: mongo:7.0 
+    profiles:
+      - test
+    restart: unless-stopped 
+    ports:
+      - "27018:27017"
+
+    command: ["mongod", "--replSet", "rs0", "--bind_ip_all"]
+    healthcheck:
+      test: echo "try { rs.status() } catch (e) { rs.initiate() }" | mongosh --quiet
+      interval: 5s
+      timeout: 5s
+      retries: 5

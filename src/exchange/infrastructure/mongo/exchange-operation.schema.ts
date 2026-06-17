@@ -4,20 +4,34 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
   timestamps: true,
 })
 export class ExchangeOperationDocument {
-  @Prop()
-  amount!: number;
+  @Prop({
+    required: true,
+    unique: true,
+  })
+  transactionId!: string;
 
-  @Prop()
+  @Prop({
+    required: true,
+  })
+  customerId!: string;
+
+  @Prop({
+    required: true,
+  })
   exchangeRate!: number;
 
-  @Prop()
-  convertedAmount!: number;
+  @Prop({
+    required: true,
+  })
+  amountUsd!: number;
+
+  @Prop({
+    required: true,
+  })
+  amountPen!: number;
 
   @Prop()
-  sourceCurrency!: string;
-
-  @Prop()
-  targetCurrency!: string;
+  status!: string;
 }
 
 export const ExchangeOperationSchema = SchemaFactory.createForClass(

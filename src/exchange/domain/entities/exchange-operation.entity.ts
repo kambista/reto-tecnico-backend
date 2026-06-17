@@ -1,11 +1,12 @@
-import { Currency } from '../../dto/create-exchange.dto';
+import { TransactionStatus } from '../../dto/create-exchange.dto';
 
 export class ExchangeOperation {
   constructor(
-    public readonly amount: number,
+    public readonly customerId: string,
+    public readonly transactionId: string,
     public readonly exchangeRate: number,
-    public readonly convertedAmount: number,
-    public readonly sourceCurrency: Currency,
-    public readonly targetCurrency: Currency,
+    public readonly amountUsd: number,
+    public readonly amountPen: number,
+    public readonly status: TransactionStatus,
   ) {}
 }

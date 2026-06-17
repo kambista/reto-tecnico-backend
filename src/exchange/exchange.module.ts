@@ -12,7 +12,7 @@ import {
 
 import { MongoExchangeOperationRepository } from './infrastructure/mongo/mongo-exchange-operation.repository';
 
-import { EXCHANGE_OPERATION_REPOSITORY } from '../constants/injection-token';
+import { EXCHANGE_OPERATION_REPOSITORY } from '../common/constants/injection-token';
 
 import { ExchangeRateModule } from '../exchange-rate/exchange-rate.module';
 

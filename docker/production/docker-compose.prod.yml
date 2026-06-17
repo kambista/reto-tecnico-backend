@@ -1,0 +1,25 @@
+services:
+  api:
+    build:
+      context: ../../
+      dockerfile: docker/production/Dockerfile.prod
+    container_name: kambista-api
+    ports:
+      - "3000:3000"
+    environment:
+      MONGODB_URI: mongodb://mongodb:27017/kambista
+      PORT: 3000
+    depends_on:
+      - mongodb
+
+  mongodb:
+    image: mongo:7
+    container_name: kambista-mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+volumes:
+  mongo_data:
